@@ -91,7 +91,7 @@ bool getVl53l8cxBitmap() {
             saw_something = true;
           }
           sensorBitmap[index] = map(distance, 0, 400, 0, 5);  // Map distance to levels 0-5
-          tofData[j+k] = distance / (float)200.0;
+          tofData[j+k] = distance / (float)400.0;
           dataStr += String(distance) + ",";
         }
       }
@@ -198,41 +198,49 @@ void setup() {
 }
 
 void drawClassification(float rockPercentage, float paperPercentage, float scissorsPercentage) {
+  int barWidth = 10;  // Width of each bar
+  int barSpacing = 3; // Space between bars
+  int baseY = 51; // Bottom of the chart (SSD1306 uses (0,0) at top-left)
+  int maxHeight = 50; // Maximum height of bars
+
+  // Scale percentages to fit within maxHeight
+  int rockHeight = int(rockPercentage * maxHeight);
+  int paperHeight = int(paperPercentage * maxHeight);
+  int scissorsHeight = int(scissorsPercentage * maxHeight);
+
+  // X positions for each bar
+  int xRock = 70;
+  int xPaper = xRock + barWidth + barSpacing;
+  int xScissors = xPaper + barWidth + barSpacing;
+
+  // Draw bars
+  display.fillRect(xRock, baseY - rockHeight, barWidth, rockHeight, SSD1306_WHITE);
+  display.fillRect(xPaper, baseY - paperHeight, barWidth, paperHeight, SSD1306_WHITE);
+  display.fillRect(xScissors, baseY - scissorsHeight, barWidth, scissorsHeight, SSD1306_WHITE);
+
+  // Draw labels under bars
   display.setTextSize(1);
-  display.setTextColor(WHITE,BLACK);
-  display.setCursor(80,0);
-  display.println("rock:");
-  display.setCursor(80,8);
-  display.println(rockPercentage);
-  display.setCursor(80,19);
-  display.println("paper:");
-  display.setCursor(80,27);
-  display.println(paperPercentage);
-  display.setCursor(80,38);
-  display.println("scissors:");
-  display.setCursor(80,46);
-  display.println(scissorsPercentage);
+  display.setTextColor(WHITE, BLACK);
+  display.setCursor(xRock + 2, baseY + 2);
+  display.println("R");
+  display.setCursor(xPaper + 2, baseY + 2);
+  display.println("P");
+  display.setCursor(xScissors + 2, baseY + 2);
+  display.println("S");
 }
 
+
 void loop() {
-  // Serial.println(1);
   float rockPercentage = -1.0;
-  // Serial.println(2);
   float paperPercentage = -1.0;
-  // Serial.println(3);
   float scissorsPercentage = -1.0;
-  // Serial.println(4);
   bool saw_something = getVl53l8cxBitmap();
-  // Serial.println(5);
   scaleBitmapWithShades(sensorBitmap, scaledBitmap);
-  // Serial.println(6);
   for (int i = 0; i < 64; ++i) {
     model_input->data.f[i] = tofData[i];
   }
-  // Serial.println(7);
   // Run inference, and report any error.
   TfLiteStatus invoke_status = interpreter->Invoke();
-  // Serial.println(8);
   if (invoke_status == kTfLiteOk)
   {
       const float *prediction_scores = interpreter->output(0)->data.f;
@@ -240,11 +248,9 @@ void loop() {
       rockPercentage = prediction_scores[1];
       scissorsPercentage = prediction_scores[2];
   }
-  // Serial.println(9);
 
   display.clearDisplay();
   drawClassification(rockPercentage, paperPercentage, scissorsPercentage);
   display.drawBitmap(0, 0, scaledBitmap, DISPLAY_WIDTH, DISPLAY_HEIGHT, SSD1306_WHITE);
   display.display();
-  // Serial.println(10);
 }
