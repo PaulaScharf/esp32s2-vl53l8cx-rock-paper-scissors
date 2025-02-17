@@ -23,7 +23,7 @@ namespace {
   // Create an area of memory to use for input, output, and intermediate arrays.
   // The size of this will depend on the model you're using, and may need to be
   // determined by experimentation.
-  constexpr int kTensorArenaSize = 71*1028 ;
+  constexpr int kTensorArenaSize = 71*1028 + 128 ;
   uint8_t tensor_arena[kTensorArenaSize];
 }
 
@@ -91,7 +91,7 @@ bool getVl53l8cxBitmap() {
             saw_something = true;
           }
           sensorBitmap[index] = map(distance, 0, 400, 0, 5);  // Map distance to levels 0-5
-          tofData[j+k] = distance / (float)200.0;
+          tofData[j+k] = distance / (float)400.0;
           dataStr += String(distance) + ",";
         }
       }

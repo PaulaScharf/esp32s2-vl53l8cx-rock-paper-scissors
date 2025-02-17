@@ -20,12 +20,12 @@ def save_frames(data, output_folder, prefix):
         plt.title(f"{prefix} - frame {i + 1}")
         plt.axis('off')
 
-        output_path = os.path.join(output_folder, f"plots/{prefix}_frame_{i + 1}.png")
+        output_path = os.path.join(output_folder, f"plots\{prefix}_frame_{i + 1}.png")
         plt.savefig(output_path)
         plt.close()
 
 # Paths to your CSV files
-file_paths = ["data/paper2.csv", "data/rock2.csv", "data/scissors2.csv"]
+file_paths = ["data\paper2.csv", "data\\rock.csv", "data\scissors.csv"]
 
 # Loop through each file and save frames
 for file_path in file_paths:
