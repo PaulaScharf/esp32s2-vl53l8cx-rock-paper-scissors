@@ -102,18 +102,18 @@ void classifyAndDisplay() {
     // Run the model and display results if successful
     if (interpreter->Invoke() == kTfLiteOk) {
         const float *output = interpreter->output(0)->data.f;
-        
-        // Display rock percentage
-        display.setCursor(10, yPosition);
-        display.printf("Rock: %.2f", output[1]);
-        yPosition += 10; // Move down for the next line
 
-        // Display paper percentage
+        // Display paper percentage (output[0] für Paper)
         display.setCursor(10, yPosition);
         display.printf("Paper: %.2f", output[0]);
         yPosition += 10; // Move down for the next line
+
+        // Display rock percentage (output[1] für Rock)
+        display.setCursor(10, yPosition);
+        display.printf("Rock: %.2f", output[1]);
+        yPosition += 10; // Move down for the next line
         
-        // Display scissors percentage
+        // Display scissors percentage (output[2] für Scissors)
         display.setCursor(10, yPosition);
         display.printf("Scissors: %.2f", output[2]);
     } else {
