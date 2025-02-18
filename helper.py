@@ -46,6 +46,21 @@ def test_tflite(tflite_model, X_test, y_test):
 	print("TensorFlow Lite model:")
 	return accuracy,precision,recall
 
+def convert_to_c_array(file_path, output_file):
+    with open(file_path, "rb") as f:
+        data = f.read()
+    
+    data_length = len(data)
+    
+    with open(output_file, "w") as f:
+        f.write(f"unsigned char model_tflite[] = {{\n")
+        for i, byte in enumerate(data):
+            f.write(f"0x{byte:02x}, ")
+            if (i + 1) % 12 == 0:
+                f.write("\n")
+        f.write(f"\n}};\n\n")
+        f.write(f"unsigned int model_tflite_len = {data_length};\n")
+
 # Function to load the TFLite model and run inference
 def run_tflite_inference(tflite_model_path, X_test):
     # Load the TFLite model
@@ -74,13 +89,13 @@ def run_tflite_inference(tflite_model_path, X_test):
 def create_model():
     # Build a larger CNN model
     model = models.Sequential([
-        layers.Reshape((8,8,1), input_shape=(64,)),
-        layers.Conv2D(8, (3, 3), activation='relu', padding='same', input_shape=(8, 8, 1)),
-        layers.MaxPooling2D((2, 2), padding='same'),
-        layers.Conv2D(16, (3, 3), activation='relu', padding='same'),
-        layers.Flatten(),
-        layers.Dense(32, activation='relu'),
-        layers.Dense(3, activation='softmax')
+        layers.Reshape((8,8,1), input_shape=(64,), name='reshape'),
+        layers.Conv2D(8, (3, 3), activation='relu', padding='same', input_shape=(8, 8, 1), name='conv2D_1'),
+        layers.MaxPooling2D((2, 2), padding='same', name='maxPooling2D'),
+        layers.Conv2D(16, (3, 3), activation='relu', padding='same', name='conv2D_2'),
+        layers.Flatten(name='flatten'),
+        layers.Dense(32, activation='relu', name='dense_1'),
+        layers.Dense(3, activation='softmax', name='dense_2')
     ])
 
     # Compile the model
