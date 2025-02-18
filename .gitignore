@@ -1,2 +1,5 @@
-/data
+/data/for_edge_impulse
+/data/plots
+/data/prediction_plots
 /training
+/__pycache__
