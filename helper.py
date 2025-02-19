@@ -91,8 +91,8 @@ def create_model():
     model = models.Sequential([
         layers.Reshape((8,8,1), input_shape=(64,), name='reshape'),
         layers.Conv2D(8, (3, 3), activation='relu', padding='same', input_shape=(8, 8, 1), name='conv2D_1'),
-        layers.MaxPooling2D((2, 2), padding='same', name='maxPooling2D'),
         layers.Conv2D(16, (3, 3), activation='relu', padding='same', name='conv2D_2'),
+        layers.MaxPooling2D((2, 2), padding='same', name='maxPooling2D'),
         layers.Flatten(name='flatten'),
         layers.Dense(32, activation='relu', name='dense_1'),
         layers.Dense(3, activation='softmax', name='dense_2')
