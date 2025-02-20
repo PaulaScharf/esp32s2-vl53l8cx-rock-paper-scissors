@@ -244,8 +244,8 @@ void loop() {
   if (invoke_status == kTfLiteOk)
   {
       const float *prediction_scores = interpreter->output(0)->data.f;
-      paperPercentage = prediction_scores[0];
-      rockPercentage = prediction_scores[1];
+      rockPercentage = prediction_scores[0];
+      paperPercentage = prediction_scores[1];
       scissorsPercentage = prediction_scores[2];
   }
 
