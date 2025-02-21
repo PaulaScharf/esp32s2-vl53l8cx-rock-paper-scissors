@@ -100,8 +100,7 @@ void loop() {
   float avgRock = rockSum / count;
   float avgPaper = paperSum / count;
   float avgScissors = scissorsSum / count;
-  String result = (avgRock > avgPaper && avgRock > avgScissors) ? "Rock" :
-                  (avgPaper > avgRock && avgPaper > avgScissors) ? "Paper" : "Scissors";
+  String result = (avgRock > avgPaper && avgRock > avgScissors) ? "Rock" : (avgPaper > avgRock && avgPaper > avgScissors) ? "Paper" : "Scissors";
   
   display.clearDisplay();
   display.setTextSize(2);
